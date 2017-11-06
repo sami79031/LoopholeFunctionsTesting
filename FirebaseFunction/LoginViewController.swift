@@ -14,8 +14,6 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var userNameTF: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -50,8 +48,6 @@ class LoginViewController: UIViewController {
         }
         self.performSegue(withIdentifier: "toViewController", sender: sender)
     }
-    
-    
     
     func initUser(_ name: String){
         let token = Messaging.messaging().fcmToken ?? ""

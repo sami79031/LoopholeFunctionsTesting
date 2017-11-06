@@ -22,9 +22,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, ESTBea
         FirebaseApp.configure()
         self.beaconManager.delegate = self
         
-        DispatchQueue.main.async {
-            self.beaconManager.requestAlwaysAuthorization()
-        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "kSHOW_LOCATION_NOTIFICATIONS"), object: nil, queue: nil, using: {
+            note in
+            DispatchQueue.main.async {
+                self.beaconManager.requestAlwaysAuthorization()
+            }
+        })
         
         Messaging.messaging().delegate = self
         

@@ -24,6 +24,8 @@ class ViewController: UIViewController {
             self.userNameHolder.text = UserF.shared().userName ?? "NaN"
             self.observeIfCurrentlyCheckedInAdded()
             self.observeIfCurrentlyCheckedInRemoved()
+            
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "kSHOW_LOCATION_NOTIFICATIONS"), object: nil, userInfo: nil)
         }
     }
     
