@@ -10,13 +10,12 @@ import UIKit
 import Firebase
 
 class LoginViewController: UIViewController {
-    var token = ""
     var firstRun = true
     @IBOutlet weak var userNameTF: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        token = Messaging.messaging().fcmToken ?? ""
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -39,13 +38,14 @@ class LoginViewController: UIViewController {
         }
         UserF.shared().checkIfUserAlreadyExists(currentUserName: userName) { (result) in
             self.initUser(userName)
+            let token = Messaging.messaging().fcmToken ?? ""
             UserDefaults.standard.set(userName, forKey: "kUSER_NAME")
-            UserDefaults.standard.set(self.token, forKey: "kUSER_TOKEN")
+            UserDefaults.standard.set(token, forKey: "kUSER_TOKEN")
             UserDefaults.standard.synchronize()
             if result {
-                UserF.shared().updateUserPushId(self.token)
+                UserF.shared().updateUserPushId(token)
             }else{
-                UserF.shared().createUser(self.token)
+                UserF.shared().createUser(token)
             }
         }
         self.performSegue(withIdentifier: "toViewController", sender: sender)
@@ -54,6 +54,7 @@ class LoginViewController: UIViewController {
     
     
     func initUser(_ name: String){
+        let token = Messaging.messaging().fcmToken ?? ""
         UserF.shared().userName = name
         UserF.shared().pushId = token
     }
