@@ -22,10 +22,10 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.9) {
             self.userNameHolder.text = UserF.shared().userName ?? "NaN"
-            self.observeIfCurrentlyCheckedIn()
+            self.observeIfCurrentlyCheckedInAdded()
+            self.observeIfCurrentlyCheckedInRemoved()
         }
     }
-    
     
     @IBAction func logOut(_ sender: UIButton) {
         UserF.shared().updateUserPushId("") {
@@ -37,14 +37,22 @@ class ViewController: UIViewController {
         }
     }
     
-    func observeIfCurrentlyCheckedIn(){
+    func observeIfCurrentlyCheckedInAdded(){
         firebase.child("CheckedInVenue").child(UserF.shared().userName!).observe(.value) { (snapshot) in
             if snapshot.exists(){
-                let dict = snapshot.value as! NSDictionary
+                guard let dict = snapshot.value as? NSDictionary else {return}
                 if let venueName = dict["venueName"] as? String{
                     self.currentlyCheckedIn.text = venueName
                 }
             }else{
+                self.currentlyCheckedIn.text = "Not checked in yet!"
+            }
+        }
+    }
+    
+    func observeIfCurrentlyCheckedInRemoved(){
+        firebase.child("CheckedInVenue").child(UserF.shared().userName!).observe(.childRemoved) { (snapshot) in
+            if snapshot.exists(){
                 self.currentlyCheckedIn.text = "Not checked in yet!"
             }
         }
